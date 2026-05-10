@@ -14,14 +14,15 @@ function formatPrivateKey(key: string | undefined): string | undefined {
   // 2. Replace escaped \n sequences with real newlines
   formatted = formatted.replace(/\\n/g, '\n');
   
-  // 3. Handle cases where the parser squashed everything into a single line
-  if (formatted.includes('-----BEGIN PRIVATE KEY-----') && !formatted.includes('\n')) {
+  // 3. Handle cases where the parser squashed everything into a single line or replaced newlines with spaces
+  if (formatted.includes('-----BEGIN PRIVATE KEY-----')) {
     const header = '-----BEGIN PRIVATE KEY-----';
     const footer = '-----END PRIVATE KEY-----';
     
     let body = formatted
       .replace(header, '')
       .replace(footer, '')
+      .replace(/\s+/g, '') // Remove all whitespaces, tabs, and newlines
       .trim();
       
     // Strip accidental leading/trailing 'n' characters left over from stripped backslashes
@@ -43,11 +44,20 @@ function formatPrivateKey(key: string | undefined): string | undefined {
 // Initialize Firebase Admin with the project ID and credentials
 if (!admin.apps.length) {
   try {
-    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
+    const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
       ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
       : undefined;
 
-    if (serviceAccount || process.env.FIREBASE_PRIVATE_KEY) {
+    if (serviceAccountJson) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: serviceAccountJson.project_id,
+          clientEmail: serviceAccountJson.client_email,
+          privateKey: formatPrivateKey(serviceAccountJson.private_key),
+        }),
+      });
+      console.log('Firebase Admin initialized from FIREBASE_SERVICE_ACCOUNT_JSON');
+    } else if (process.env.FIREBASE_PRIVATE_KEY) {
       admin.initializeApp({
         credential: admin.credential.cert({
           projectId: process.env.FIREBASE_PROJECT_ID || 'project-x-f46f0',
@@ -55,15 +65,28 @@ if (!admin.apps.length) {
           privateKey: formatPrivateKey(process.env.FIREBASE_PRIVATE_KEY),
         }),
       });
+      console.log('Firebase Admin initialized from discrete environment variables');
     } else {
       // For local development, it can fall back to environment defaults if using ADC
       admin.initializeApp({
-        projectId: 'project-x-f46f0',
+        projectId: process.env.FIREBASE_PROJECT_ID || 'project-x-f46f0',
       });
+      console.log('Firebase Admin initialized with default local config');
     }
-    console.log('Firebase Admin initialized for project: project-x-f46f0');
   } catch (error: any) {
-    console.error('Firebase admin initialization error', error.stack);
+    console.error('Firebase admin initialization error:', error.stack);
+    
+    // Resilient fallback: ensure the app is initialized so importing db/auth/storage doesn't crash the build
+    try {
+      if (!admin.apps.length) {
+        admin.initializeApp({
+          projectId: process.env.FIREBASE_PROJECT_ID || 'project-x-f46f0',
+        });
+        console.log('Firebase Admin fallback initialization succeeded after error');
+      }
+    } catch (fallbackError) {
+      // Ignore fallback errors
+    }
   }
 }
 
