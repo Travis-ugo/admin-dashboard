@@ -1,0 +1,81 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Helpers ---
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // --- Knowledge Items (Notes) ---
+    match /knowledge_items/{userId}/notes/{noteId} {
+      allow read, write: if isOwner(userId);
+    }
+    match /knowledge_items/{userId}/trash/{noteId} {
+      allow read, write: if isOwner(userId);
+    }
+    match /knowledge_items/{itemId} {
+      allow read, write: if isAuthenticated() && (resource.data.user_id == request.auth.uid || request.resource.data.user_id == request.auth.uid);
+    }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin(); 
+    }
+
+    // --- Import Jobs ---
+    match /imports/{importId} {
+      allow read: if isOwner(resource.data.user_id) || isAdmin();
+      allow create: if isOwner(request.resource.data.user_id);
+      allow update: if isOwner(resource.data.user_id) || isAdmin();
+      allow delete: if false; 
+    }
+
+    // --- Feedback & Support ---
+    match /feedbacks/{feedbackId} {
+      // Admins have full control
+      allow read, update, delete: if isAdmin();
+      
+      // Users can see their own tickets
+      allow read: if isOwner(resource.data.user_id);
+
+      // Users can submit new tickets (must set their own userId)
+      allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+
+      // Users can mark as read AND send follow-up messages
+      allow update: if isOwner(resource.data.user_id) 
+                  && request.resource.data.diff(resource.data).affectedKeys()
+                     .hasOnly(['user_read', 'messages', 'status', 'updated_at']);
+    }
+
+    // --- FAQs ---
+    match /faqs/{faqId} {
+      allow read: if true; // Mobile app needs to read FAQs
+      allow write: if isAdmin(); // Only admins can manage FAQ content
+    }
+
+    // --- Help Articles ---
+    match /help_articles/{articleId} {
+      allow read: if true; 
+      allow write: if isAdmin(); 
+    }
+
+    // --- App Settings ---
+    match /app_settings/{settingId} {
+      allow read: if true; // Publicly readable settings (like privacy policy)
+      allow write: if isAdmin(); // Only admins can update app settings
+    }
+  }
+}
