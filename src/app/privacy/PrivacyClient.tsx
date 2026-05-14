@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 import { Shield, Lock, Eye, Server, RefreshCw, Mail } from 'lucide-react';
 
 interface PrivacyClientProps {
@@ -85,9 +86,9 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
         >
           <div className="prose prose-neutral max-w-none">
             {content ? (
-              // If content comes from Firestore, render it nicely
-              <div className="whitespace-pre-wrap text-neutral-600 text-lg leading-relaxed font-light">
-                {content}
+              // If content comes from Firestore, render it nicely using ReactMarkdown
+              <div className="text-neutral-600 text-lg leading-relaxed font-light prose-headings:text-dark-green prose-h3:text-2xl prose-h3:font-semibold prose-a:text-dark-green prose-hr:border-neutral-100 prose-hr:my-8 prose-li:text-neutral-600 prose-ul:list-disc prose-ul:pl-6 prose-strong:text-dark-green prose-strong:font-semibold">
+                <ReactMarkdown>{content}</ReactMarkdown>
               </div>
             ) : (
               // Fallback to beautiful default sections if no custom content
