@@ -16,6 +16,8 @@ import { useAuth } from '@/context/AuthContext';
 interface ImportJob {
     id: string;
     userId: string;
+    userName?: string;
+    userEmail?: string;
     status: 'Pending' | 'Processing' | 'Completed' | 'Failed';
     createdAt: string;
     provider: string;
@@ -63,7 +65,7 @@ export default function ImportsPage() {
                         <thead>
                             <tr className="border-b border-neutral-50">
                                 <th className="px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Import Details</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">User ID</th>
+                                <th className="px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">User</th>
                                 <th className="px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest text-center">Items</th>
                                 <th className="px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest">Created At</th>
                                 <th className="px-8 py-5 text-[10px] font-black text-neutral-400 uppercase tracking-widest text-right">Status</th>
@@ -99,9 +101,12 @@ export default function ImportsPage() {
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <div className="flex items-center gap-2 text-neutral-600 font-mono text-xs">
-                                                {job.userId}
-                                                <ExternalLink className="w-3 h-3 text-neutral-300" />
+                                            <div className="flex flex-col justify-center">
+                                                <p className="text-sm font-bold text-neutral-900 leading-tight">{job.userName || 'Unknown User'}</p>
+                                                <div className="flex items-center gap-1.5 mt-1 text-neutral-400 text-[10px] font-mono leading-none">
+                                                    <span>{job.userId}</span>
+                                                    <ExternalLink className="w-2.5 h-2.5 text-neutral-300" />
+                                                </div>
                                             </div>
                                         </td>
                                         <td className="px-8 py-6 text-center">
