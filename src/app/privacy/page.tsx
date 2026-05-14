@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 shadow-lg">
+              <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
                 <Shield className="w-8 h-8 text-mint" />
               </div>
               <h2 className="text-mint font-semibold tracking-wider uppercase text-sm letter-spacing-widest">Zander App</h2>
@@ -62,7 +62,7 @@ export default function PrivacyPolicy() {
               We believe your data is yours alone. Our privacy practices are designed to be transparent, secure, and focused entirely on providing you with the best experience.
             </p>
             <div className="mt-10 flex items-center gap-4 text-sm text-neutral-400">
-              <span className="px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-sm font-medium">
+              <span className="px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm font-medium">
                 Effective Date: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
               </span>
             </div>
@@ -73,7 +73,7 @@ export default function PrivacyPolicy() {
       {/* Content Section */}
       <div className="max-w-4xl mx-auto px-6 sm:px-12 -mt-20 relative z-20 pb-24">
         <motion.div 
-          className="bg-white rounded-3xl shadow-xl shadow-neutral-200/50 border border-neutral-100 p-8 md:p-12 lg:p-16"
+          className="bg-white rounded-3xl border border-neutral-100 p-8 md:p-12 lg:p-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
@@ -94,7 +94,7 @@ export default function PrivacyPolicy() {
                   className="group"
                 >
                   <div className="flex flex-col sm:flex-row items-start gap-6">
-                    <div className="flex-shrink-0 p-4 rounded-2xl bg-neutral-50 group-hover:bg-mint/10 border border-neutral-100 group-hover:border-mint/20 transition-all duration-500 shadow-sm group-hover:shadow-md">
+                    <div className="flex-shrink-0 p-4 rounded-2xl bg-neutral-50 group-hover:bg-mint/10 border border-neutral-100 group-hover:border-mint/20 transition-all duration-500">
                       {section.icon}
                     </div>
                     <div>
@@ -110,7 +110,7 @@ export default function PrivacyPolicy() {
 
             <hr className="my-16 border-neutral-100" />
 
-            <div className="bg-gradient-to-br from-neutral-50 to-white rounded-3xl p-8 md:p-10 border border-neutral-100 text-center shadow-sm relative overflow-hidden">
+            <div className="bg-gradient-to-br from-neutral-50 to-white rounded-3xl p-8 md:p-10 border border-neutral-100 text-center relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-mint/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-sage/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
               
@@ -119,7 +119,7 @@ export default function PrivacyPolicy() {
                 <p className="text-neutral-600 mb-8 text-lg font-light max-w-md mx-auto">
                   We're here to help you understand how your data is handled.
                 </p>
-                <a href="mailto:support@zander.app" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-dark-green text-white font-medium rounded-2xl hover:bg-mint hover:text-dark-green transition-all duration-300 shadow-lg hover:shadow-mint/20 transform hover:-translate-y-1">
+                <a href="mailto:support@zander.app" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-dark-green text-white font-medium rounded-2xl hover:bg-mint hover:text-dark-green transition-all duration-300 transform hover:-translate-y-1">
                   <Mail className="w-5 h-5" />
                   Contact Support
                 </a>
