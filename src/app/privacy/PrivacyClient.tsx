@@ -59,7 +59,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
               <div className="p-2 bg-white rounded-2xl border border-white/10 overflow-hidden w-16 h-16 flex items-center justify-center">
                 <img src="/logo.svg" alt="Zander Logo" className="w-full h-full object-contain" />
               </div>
-              <h2 className="text-mint font-semibold tracking-wider uppercase text-sm letter-spacing-widest">Zander App</h2>
+              <h2 className="text-mint font-semibold tracking-wider uppercase text-sm letter-spacing-widest">Zander</h2>
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight">
               Privacy Policy
@@ -78,7 +78,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
 
       {/* Content Section */}
       <div className="max-w-4xl mx-auto px-6 sm:px-12 -mt-20 relative z-20 pb-24">
-        <motion.div 
+        <motion.div
           className="bg-white rounded-3xl border border-neutral-100 p-8 md:p-12 lg:p-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -99,7 +99,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
 
                 <div className="space-y-12">
                   {defaultSections.map((section, index) => (
-                    <motion.div 
+                    <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
@@ -129,7 +129,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
             <div className="bg-gradient-to-br from-neutral-50 to-white rounded-3xl p-8 md:p-10 border border-neutral-100 text-center relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-mint/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-sage/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-              
+
               <div className="relative z-10">
                 <h3 className="text-2xl font-semibold text-dark-green mb-3">Still have questions?</h3>
                 <p className="text-neutral-600 mb-8 text-lg font-light max-w-md mx-auto">
@@ -144,7 +144,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
           </div>
         </motion.div>
       </div>
-      
+
       {/* Footer */}
       <footer className="border-t border-neutral-200 bg-white py-10 text-center text-neutral-500 font-light">
         <p>© {new Date().getFullYear()} Zander. All rights reserved.</p>
