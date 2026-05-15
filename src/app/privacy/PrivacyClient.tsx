@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import { Fingerprint, Key, ScanFace, Database, RotateCw, Send, ShieldCheck } from 'lucide-react';
+import { Fingerprint, Key, ScanFace, Database, RotateCw, Send } from 'lucide-react';
 
 interface PrivacyClientProps {
   content?: string | null;
@@ -56,8 +56,8 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
-                <ShieldCheck className="w-10 h-10 text-mint" strokeWidth={1.5} />
+              <div className="p-2 bg-white rounded-2xl border border-white/10 overflow-hidden w-16 h-16 flex items-center justify-center">
+                <img src="/logo.svg" alt="Zander Logo" className="w-full h-full object-contain" />
               </div>
               <h2 className="text-mint font-semibold tracking-wider uppercase text-sm letter-spacing-widest">Zander App</h2>
             </div>
@@ -86,8 +86,8 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
         >
           <div className="prose prose-neutral max-w-none">
             {content ? (
-              // If content comes from Firestore, render it nicely using ReactMarkdown
-              <div className="text-neutral-600 text-lg leading-relaxed font-light prose-headings:text-dark-green prose-h3:text-2xl prose-h3:font-semibold prose-a:text-dark-green prose-hr:border-neutral-100 prose-hr:my-8 prose-li:text-neutral-600 prose-ul:list-disc prose-ul:pl-6 prose-strong:text-dark-green prose-strong:font-semibold">
+              // Use the same premium styling class we defined for the admin editor
+              <div className="wmde-markdown">
                 <ReactMarkdown>{content}</ReactMarkdown>
               </div>
             ) : (

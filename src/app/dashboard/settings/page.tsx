@@ -22,11 +22,12 @@ interface AppSettings {
 
 export default function SettingsPage() {
     const { user, isLoading: authLoading } = useAuth();
-    const [settings, setSettings] = useState<AppSettings>({
-        privacyPolicy: '',
-        termsOfService: '',
-        supportEmail: ''
-    });
+    
+    // Separate states to prevent massive re-renders on every keystroke
+    const [privacyPolicy, setPrivacyPolicy] = useState('');
+    const [termsOfService, setTermsOfService] = useState('');
+    const [supportEmail, setSupportEmail] = useState('');
+    
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -41,11 +42,9 @@ export default function SettingsPage() {
         try {
             setIsLoading(true);
             const res = await axios.get('/api/admin/settings');
-            setSettings({
-                privacyPolicy: res.data.privacyPolicy || '',
-                termsOfService: res.data.termsOfService || '',
-                supportEmail: res.data.supportEmail || ''
-            });
+            setPrivacyPolicy(res.data.privacyPolicy || '');
+            setTermsOfService(res.data.termsOfService || '');
+            setSupportEmail(res.data.supportEmail || '');
         } catch (error) {
             console.error('Failed to fetch settings:', error);
             setMessage({ type: 'error', text: 'Failed to load settings.' });
@@ -58,7 +57,11 @@ export default function SettingsPage() {
         try {
             setIsSaving(true);
             setMessage(null);
-            await axios.post('/api/admin/settings', settings);
+            await axios.post('/api/admin/settings', {
+                privacyPolicy,
+                termsOfService,
+                supportEmail
+            });
             setMessage({ type: 'success', text: 'Settings saved successfully. Changes will reflect in the mobile app immediately.' });
 
             // Clear success message after 5 seconds
@@ -76,9 +79,6 @@ export default function SettingsPage() {
             <div className="w-full">
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
-                        {/* <div className="w-10 h-10 rounded-xl bg-dark-green/10 flex items-center justify-center">
-                            <Settings className="w-5 h-5 text-dark-green" />
-                        </div> */}
                         <h1 className="text-2xl font-bold text-neutral-900">App Settings</h1>
                     </div>
                     <p className="text-neutral-500">Manage legal content and support configuration for the Zander mobile app.</p>
@@ -115,8 +115,8 @@ export default function SettingsPage() {
                                         <p className="text-xs text-neutral-500 mb-3">This email is used when users tap &quot;Contact Support&quot; in the mobile app.</p>
                                         <input
                                             type="email"
-                                            value={settings.supportEmail}
-                                            onChange={(e) => setSettings({ ...settings, supportEmail: e.target.value })}
+                                            value={supportEmail}
+                                            onChange={(e) => setSupportEmail(e.target.value)}
                                             className="w-full px-4 py-3 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-dark-green focus:border-transparent outline-none transition-all"
                                             placeholder="support@zander.app"
                                         />
@@ -134,10 +134,18 @@ export default function SettingsPage() {
                                         <label className="block text-sm font-bold text-neutral-700 mb-2">Privacy Policy</label>
                                         <div data-color-mode="light" className="border border-neutral-200 rounded-[1.5rem] focus-within:ring-4 focus-within:ring-dark-green/5 focus-within:border-dark-green/20 transition-all bg-white">
                                             <MDEditor
-                                                value={settings.privacyPolicy}
-                                                onChange={(val) => setSettings({ ...settings, privacyPolicy: val || '' })}
+                                                value={privacyPolicy}
+                                                onChange={(val) => setPrivacyPolicy(val || '')}
                                                 height={400}
                                                 className="!border-none !bg-transparent"
+                                                previewOptions={{
+                                                    components: {
+                                                        img: ({ src, alt }: any) => {
+                                                            if (!src) return null;
+                                                            return <img src={src} alt={alt || 'Markdown Image'} />;
+                                                        }
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </div>
@@ -146,10 +154,18 @@ export default function SettingsPage() {
                                         <label className="block text-sm font-bold text-neutral-700 mb-2">Terms of Service</label>
                                         <div data-color-mode="light" className="border border-neutral-200 rounded-[1.5rem] focus-within:ring-4 focus-within:ring-dark-green/5 focus-within:border-dark-green/20 transition-all bg-white">
                                             <MDEditor
-                                                value={settings.termsOfService}
-                                                onChange={(val) => setSettings({ ...settings, termsOfService: val || '' })}
+                                                value={termsOfService}
+                                                onChange={(val) => setTermsOfService(val || '')}
                                                 height={400}
                                                 className="!border-none !bg-transparent"
+                                                previewOptions={{
+                                                    components: {
+                                                        img: ({ src, alt }: any) => {
+                                                            if (!src) return null;
+                                                            return <img src={src} alt={alt || 'Markdown Image'} />;
+                                                        }
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </div>

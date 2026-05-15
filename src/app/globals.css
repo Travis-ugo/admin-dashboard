@@ -105,12 +105,12 @@ body {
   }
 
   .w-md-editor-toolbar ul li button {
-    @apply !text-neutral-500 hover:!text-dark-green hover:!bg-white !rounded-lg !transition-all;
+    @apply !text-neutral-500 hover:!text-dark-green hover:!bg-white !rounded-lg !transition-all !font-sans !font-bold;
   }
 
   /* Ensure dropdowns/popovers are visible and styled */
   .w-md-editor-toolbar-child {
-    @apply !bg-white !border !border-neutral-100 !shadow-2xl !rounded-2xl !z-[100] !p-2 !min-w-[160px];
+    @apply !bg-white !border !border-neutral-100 !shadow-2xl !rounded-2xl !z-[100] !p-2 !min-w-[160px] !font-sans;
   }
 
   .w-md-editor-toolbar-child ul {
@@ -122,7 +122,7 @@ body {
   }
 
   .w-md-editor-toolbar-child button {
-    @apply !text-neutral-700 hover:!text-dark-green !bg-transparent hover:!bg-neutral-50 !w-full !text-left !px-4 !py-2.5 !rounded-xl !transition-all !flex !items-center !gap-3 !font-bold !text-sm;
+    @apply !text-neutral-700 hover:!text-dark-green !bg-transparent hover:!bg-neutral-50 !w-full !text-left !px-4 !py-2.5 !rounded-xl !transition-all !flex !items-center !gap-3 !font-bold !text-sm !font-sans;
   }
 
   .w-md-editor-toolbar-child button:hover {
@@ -134,11 +134,15 @@ body {
   }
 
   .w-md-editor-content {
-    @apply !bg-white !rounded-b-[1.5rem];
+    @apply !bg-white !rounded-b-[1.5rem] !font-sans;
+  }
+
+  .w-md-editor-text-input, .w-md-editor-text-pre {
+    @apply !font-sans !text-[15px] !leading-relaxed;
   }
 
   .w-md-editor-preview {
-    @apply !bg-white !px-8 !py-6 border-l border-neutral-50 !rounded-br-[1.5rem];
+    @apply !bg-white !px-8 !py-6 border-l border-neutral-50 !rounded-br-[1.5rem] !font-sans;
   }
 
   .wmde-markdown {
@@ -156,5 +160,9 @@ body {
 
   .wmde-markdown a {
     @apply !text-dark-green !underline !decoration-mint/50 hover:!decoration-mint;
+  }
+
+  .wmde-markdown img {
+    @apply !max-w-full !h-auto !rounded-2xl !my-8 !mx-auto !shadow-lg !block;
   }
 }
