@@ -30,10 +30,11 @@ export default function UsersPage() {
 
     useEffect(() => {
         if (!authLoading && user) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsLoading(true);
             axios.get('/api/admin/users')
                 .then(res => setUsers(res.data.users))
-                .catch(err => console.error(err))
+                .catch(err => console.error('Failed to fetch users:', err))
                 .finally(() => setIsLoading(false));
         }
     }, [user, authLoading]);

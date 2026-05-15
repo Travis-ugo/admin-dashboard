@@ -3,7 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import { Shield, Lock, Eye, Server, RefreshCw, Mail } from 'lucide-react';
+import { Fingerprint, Key, ScanFace, Database, RotateCw, Send, ShieldCheck } from 'lucide-react';
 
 interface PrivacyClientProps {
   content?: string | null;
@@ -13,32 +13,32 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
   // Fallback default sections if no content in Firestore
   const defaultSections = [
     {
-      icon: <Eye className="w-6 h-6 text-mint" />,
+      icon: <ScanFace className="w-7 h-7 text-mint" strokeWidth={1.5} />,
       title: "1. Information We Collect",
       content: "When you use Zander, we collect the content you provide, including notes, voice memos, and text inputs. We also collect basic usage data to improve our services and ensure the app functions properly. For account management, we store your email address and authentication details."
     },
     {
-      icon: <Server className="w-6 h-6 text-sage" />,
+      icon: <Database className="w-7 h-7 text-sage" strokeWidth={1.5} />,
       title: "2. How We Use Your Data",
       content: "Your data is primarily used to provide you with the core functionality of Zander—processing and organizing your notes. We use advanced AI models to synthesize and summarize your data locally and securely. We do not sell your personal information to third parties."
     },
     {
-      icon: <Lock className="w-6 h-6 text-lime" />,
+      icon: <Key className="w-7 h-7 text-lime" strokeWidth={1.5} />,
       title: "3. Data Security",
       content: "We implement industry-standard security measures to protect your data during transmission and at rest. Your notes are stored securely using encrypted cloud databases, ensuring only authorized access through your authenticated account."
     },
     {
-      icon: <RefreshCw className="w-6 h-6 text-mint" />,
+      icon: <RotateCw className="w-7 h-7 text-mint" strokeWidth={1.5} />,
       title: "4. Data Retention & Deletion",
       content: "You retain full control over your data. You can request to delete your account and all associated data at any time from within the app settings. Upon deletion, all your personal notes, voice data, and account information will be permanently removed from our active servers."
     },
     {
-      icon: <Shield className="w-6 h-6 text-sage" />,
+      icon: <Fingerprint className="w-7 h-7 text-sage" strokeWidth={1.5} />,
       title: "5. Third-Party Services",
       content: "We use trusted third-party services for database hosting and authentication, and specific AI providers to process note summaries. These services are bound by strict confidentiality and data protection agreements."
     },
     {
-      icon: <Mail className="w-6 h-6 text-lime" />,
+      icon: <Send className="w-7 h-7 text-lime" strokeWidth={1.5} />,
       title: "6. Contact Us",
       content: "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us. We are committed to resolving your inquiries promptly."
     }
@@ -56,8 +56,8 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
-                <Shield className="w-8 h-8 text-mint" />
+              <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+                <ShieldCheck className="w-10 h-10 text-mint" strokeWidth={1.5} />
               </div>
               <h2 className="text-mint font-semibold tracking-wider uppercase text-sm letter-spacing-widest">Zander App</h2>
             </div>
@@ -136,7 +136,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
                   We're here to help you understand how your data is handled.
                 </p>
                 <a href="mailto:support@zander.app" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-dark-green text-white font-medium rounded-2xl hover:bg-mint hover:text-dark-green transition-all duration-300 transform hover:-translate-y-1">
-                  <Mail className="w-5 h-5" />
+                  <Send className="w-5 h-5" strokeWidth={2} />
                   Contact Support
                 </a>
               </div>

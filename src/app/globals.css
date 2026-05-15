@@ -88,4 +88,73 @@ body {
   .btn-primary {
     @apply bg-dark-green text-white hover:bg-dark-green/90 transition-colors px-4 py-2 rounded-lg font-medium;
   }
+
+  /* Custom Markdown Editor Styling */
+  .w-md-editor {
+    @apply !bg-white !border-none !shadow-none !font-sans !overflow-visible;
+    --md-editor-bg-color: #fff;
+    --md-editor-border-color: #E5E7EB;
+  }
+
+  .w-md-editor-toolbar {
+    @apply !bg-neutral-50/80 !backdrop-blur-sm !border-b !border-neutral-100 !px-6 !py-3 !rounded-t-[1.5rem] !relative !z-20 !overflow-visible;
+  }
+
+  .w-md-editor-toolbar ul {
+    @apply !gap-1;
+  }
+
+  .w-md-editor-toolbar ul li button {
+    @apply !text-neutral-500 hover:!text-dark-green hover:!bg-white !rounded-lg !transition-all;
+  }
+
+  /* Ensure dropdowns/popovers are visible and styled */
+  .w-md-editor-toolbar-child {
+    @apply !bg-white !border !border-neutral-100 !shadow-2xl !rounded-2xl !z-[100] !p-2 !min-w-[160px];
+  }
+
+  .w-md-editor-toolbar-child ul {
+    @apply !flex !flex-col !gap-1 !w-full;
+  }
+
+  .w-md-editor-toolbar-child li {
+    @apply !w-full;
+  }
+
+  .w-md-editor-toolbar-child button {
+    @apply !text-neutral-700 hover:!text-dark-green !bg-transparent hover:!bg-neutral-50 !w-full !text-left !px-4 !py-2.5 !rounded-xl !transition-all !flex !items-center !gap-3 !font-bold !text-sm;
+  }
+
+  .w-md-editor-toolbar-child button:hover {
+    @apply !bg-neutral-50;
+  }
+
+  .w-md-editor-toolbar ul li button svg {
+    @apply !w-4 !h-4;
+  }
+
+  .w-md-editor-content {
+    @apply !bg-white !rounded-b-[1.5rem];
+  }
+
+  .w-md-editor-preview {
+    @apply !bg-white !px-8 !py-6 border-l border-neutral-50 !rounded-br-[1.5rem];
+  }
+
+  .wmde-markdown {
+    @apply !bg-transparent !text-neutral-700 !font-sans;
+    line-height: 1.6;
+  }
+
+  .wmde-markdown h1, .wmde-markdown h2, .wmde-markdown h3 {
+    @apply !text-dark-green !font-bold !mt-6 !mb-4 !border-none;
+  }
+
+  .wmde-markdown p {
+    @apply !mb-4;
+  }
+
+  .wmde-markdown a {
+    @apply !text-dark-green !underline !decoration-mint/50 hover:!decoration-mint;
+  }
 }

@@ -28,6 +28,7 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (!authLoading && user) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsLoading(true);
             axios.get('/api/admin/stats')
                 .then(res => setStats(res.data))

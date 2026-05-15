@@ -97,7 +97,7 @@ export async function getFaq(id: string) {
 export async function getKnowledgeAnalytics() {
   let recentNotes: any[] = [];
   let recentImports: any[] = [];
-  let stats = {
+  const stats = {
     totalUsers: 0,
     totalNotes: 0,
     totalImports: 0,

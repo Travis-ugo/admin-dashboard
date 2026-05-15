@@ -2,8 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
-import { Settings, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Save, AlertCircle, CheckCircle2 } from 'lucide-react';
 import axios from 'axios';
+import dynamic from 'next/dynamic';
+import { useAuth } from '@/context/AuthContext';
+import '@uiw/react-md-editor/markdown-editor.css';
+import '@uiw/react-markdown-preview/markdown.css';
+
+const MDEditor = dynamic(
+    () => import("@uiw/react-md-editor"),
+    { ssr: false }
+);
 
 interface AppSettings {
     privacyPolicy: string;
@@ -12,6 +21,7 @@ interface AppSettings {
 }
 
 export default function SettingsPage() {
+    const { user, isLoading: authLoading } = useAuth();
     const [settings, setSettings] = useState<AppSettings>({
         privacyPolicy: '',
         termsOfService: '',
@@ -22,8 +32,10 @@ export default function SettingsPage() {
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     useEffect(() => {
-        fetchSettings();
-    }, []);
+        if (!authLoading && user) {
+            fetchSettings();
+        }
+    }, [user, authLoading]);
 
     const fetchSettings = async () => {
         try {
@@ -74,8 +86,8 @@ export default function SettingsPage() {
 
                 {message && (
                     <div className={`mb-6 p-4 rounded-xl flex items-start gap-3 border ${message.type === 'success'
-                            ? 'bg-lime/20 border-dark-green/20 text-dark-green'
-                            : 'bg-red-50 border-red-100 text-red-600'
+                        ? 'bg-lime/20 border-dark-green/20 text-dark-green'
+                        : 'bg-red-50 border-red-100 text-red-600'
                         }`}>
                         {message.type === 'success' ? (
                             <CheckCircle2 className="w-5 h-5 mt-0.5 shrink-0" />
@@ -100,7 +112,7 @@ export default function SettingsPage() {
                                 <div className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-semibold text-neutral-700 mb-1.5">Support Email Address</label>
-                                        <p className="text-xs text-neutral-500 mb-3">This email is used when users tap "Contact Support" in the mobile app.</p>
+                                        <p className="text-xs text-neutral-500 mb-3">This email is used when users tap &quot;Contact Support&quot; in the mobile app.</p>
                                         <input
                                             type="email"
                                             value={settings.supportEmail}
@@ -119,23 +131,27 @@ export default function SettingsPage() {
 
                                 <div className="space-y-6">
                                     <div>
-                                        <label className="block text-sm font-semibold text-neutral-700 mb-1.5">Privacy Policy</label>
-                                        <textarea
-                                            value={settings.privacyPolicy}
-                                            onChange={(e) => setSettings({ ...settings, privacyPolicy: e.target.value })}
-                                            className="w-full px-4 py-3 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-dark-green focus:border-transparent outline-none transition-all font-mono text-sm min-h-[250px]"
-                                            placeholder="Enter Privacy Policy content..."
-                                        />
+                                        <label className="block text-sm font-bold text-neutral-700 mb-2">Privacy Policy</label>
+                                        <div data-color-mode="light" className="border border-neutral-200 rounded-[1.5rem] focus-within:ring-4 focus-within:ring-dark-green/5 focus-within:border-dark-green/20 transition-all bg-white">
+                                            <MDEditor
+                                                value={settings.privacyPolicy}
+                                                onChange={(val) => setSettings({ ...settings, privacyPolicy: val || '' })}
+                                                height={400}
+                                                className="!border-none !bg-transparent"
+                                            />
+                                        </div>
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-semibold text-neutral-700 mb-1.5">Terms of Service</label>
-                                        <textarea
-                                            value={settings.termsOfService}
-                                            onChange={(e) => setSettings({ ...settings, termsOfService: e.target.value })}
-                                            className="w-full px-4 py-3 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-dark-green focus:border-transparent outline-none transition-all font-mono text-sm min-h-[250px]"
-                                            placeholder="Enter Terms of Service content..."
-                                        />
+                                        <label className="block text-sm font-bold text-neutral-700 mb-2">Terms of Service</label>
+                                        <div data-color-mode="light" className="border border-neutral-200 rounded-[1.5rem] focus-within:ring-4 focus-within:ring-dark-green/5 focus-within:border-dark-green/20 transition-all bg-white">
+                                            <MDEditor
+                                                value={settings.termsOfService}
+                                                onChange={(val) => setSettings({ ...settings, termsOfService: val || '' })}
+                                                height={400}
+                                                className="!border-none !bg-transparent"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </section>
