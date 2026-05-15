@@ -118,7 +118,7 @@ export default function SettingsPage() {
                                             value={supportEmail}
                                             onChange={(e) => setSupportEmail(e.target.value)}
                                             className="w-full px-4 py-3 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-dark-green focus:border-transparent outline-none transition-all"
-                                            placeholder="support@zander.app"
+                                            placeholder="Enter support email address"
                                         />
                                     </div>
                                 </div>

@@ -15,7 +15,7 @@ export const GET = withAdminAuth(async (request: Request, _admin: any) => {
       return NextResponse.json({
         privacyPolicy: '',
         termsOfService: '',
-        supportEmail: 'support@zander.app'
+        supportEmail: ''
       });
     }
 

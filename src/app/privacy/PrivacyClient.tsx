@@ -7,9 +7,10 @@ import { Fingerprint, Key, ScanFace, Database, RotateCw, Send } from 'lucide-rea
 
 interface PrivacyClientProps {
   content?: string | null;
+  supportEmail?: string | null;
 }
 
-export default function PrivacyClient({ content }: PrivacyClientProps) {
+export default function PrivacyClient({ content, supportEmail }: PrivacyClientProps) {
   // Fallback default sections if no content in Firestore
   const defaultSections = [
     {
@@ -135,7 +136,7 @@ export default function PrivacyClient({ content }: PrivacyClientProps) {
                 <p className="text-neutral-600 mb-8 text-lg font-light max-w-md mx-auto">
                   We're here to help you understand how your data is handled.
                 </p>
-                <a href="mailto:support@zander.app" className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-dark-green text-white font-medium rounded-2xl hover:bg-mint hover:text-dark-green transition-all duration-300 transform hover:-translate-y-1">
+                <a href={`mailto:${supportEmail || ''}`} className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-dark-green text-white font-medium rounded-2xl hover:bg-mint hover:text-dark-green transition-all duration-300 transform hover:-translate-y-1">
                   <Send className="w-5 h-5" strokeWidth={2} />
                   Contact Support
                 </a>
