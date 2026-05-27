@@ -3,16 +3,36 @@ import * as admin from 'firebase-admin';
 // Initialize Firebase Admin with the project ID and credentials
 if (!admin.apps.length) {
   try {
-    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
-      ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
-      : undefined;
+    let serviceAccountStr = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+    if (serviceAccountStr) {
+      serviceAccountStr = serviceAccountStr.trim();
+      if (serviceAccountStr.startsWith('"') && serviceAccountStr.endsWith('"')) {
+        serviceAccountStr = serviceAccountStr.substring(1, serviceAccountStr.length - 1);
+      } else if (serviceAccountStr.startsWith("'") && serviceAccountStr.endsWith("'")) {
+        serviceAccountStr = serviceAccountStr.substring(1, serviceAccountStr.length - 1);
+      }
+    }
 
-    if (serviceAccount || process.env.FIREBASE_PRIVATE_KEY) {
+    const serviceAccount = serviceAccountStr ? JSON.parse(serviceAccountStr) : undefined;
+
+    if (serviceAccount) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    } else if (process.env.FIREBASE_PRIVATE_KEY) {
+      let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = privateKey.substring(1, privateKey.length - 1);
+      } else if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
+        privateKey = privateKey.substring(1, privateKey.length - 1);
+      }
+      privateKey = privateKey.replace(/\\n/g, '\n');
+
       admin.initializeApp({
         credential: admin.credential.cert({
           projectId: process.env.FIREBASE_PROJECT_ID || 'project-x-f46f0',
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+          privateKey: privateKey,
         }),
       });
     } else {
