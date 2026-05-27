@@ -140,15 +140,16 @@ export default function DocumentationPage() {
   const [activeId, setActiveId] = React.useState<string>('');
 
   // Remove the redundant H1 title from the markdown content if it exists at the top
-  const cleanContent = React.useMemo(() => {
-    if (!data?.content) return '';
-    const lines = data.content.split('\n');
+  const cleanContent = (() => {
+    const content = data?.content;
+    if (!content) return '';
+    const lines = content.split('\n');
     const firstH1Idx = lines.findIndex((line, idx) => idx < 5 && line.trim().startsWith('# '));
     if (firstH1Idx !== -1) {
       lines.splice(firstH1Idx, 1);
     }
     return lines.join('\n').trim();
-  }, [data?.content]);
+  })();
 
   const toc = React.useMemo(() => {
     if (!cleanContent) return [];
@@ -221,9 +222,7 @@ export default function DocumentationPage() {
     ? (error.response?.data?.error || error.message || 'Failed to load system documentation.')
     : null;
 
-  const updatedDate = React.useMemo(() => {
-    return data?.updated_at ? parseFirestoreDate(data.updated_at) : null;
-  }, [data?.updated_at]);
+  const updatedDate = data?.updated_at ? parseFirestoreDate(data.updated_at) : null;
 
   const handleBack = () => {
     if (typeof window !== 'undefined') {

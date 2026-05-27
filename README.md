@@ -114,4 +114,3 @@ src/
 
 This project is private and proprietary. All rights reserved.
 # zander-admin
-# admin-dashboard

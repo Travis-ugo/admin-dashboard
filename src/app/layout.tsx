@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Host_Grotesk } from "next/font/google"; // Use Host_Grotesk for Google Fonts
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { ToasterProvider } from "@/components/ui/Toast";
 
 const hostGrotesk = Host_Grotesk({
   variable: "--font-host-grotesk",
@@ -15,9 +17,6 @@ export const metadata: Metadata = {
     icon: '/icon.svg',
   },
 };
-
-import { AuthProvider } from "@/context/AuthContext";
-import { ToasterProvider } from "@/components/ui/Toast";
 
 export default function RootLayout({
   children,
@@ -35,5 +34,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
