@@ -7,6 +7,7 @@ import Sidebar from './Sidebar';
 import { Loader2 } from 'lucide-react';
 
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
+    '/dashboard/documentation': { title: 'System Documentation', subtitle: 'View and reference the comprehensive Zander system manual' },
     '/dashboard': { title: 'Platform Overview', subtitle: 'Global performance metrics and system health' },
     '/users': { title: 'User Management', subtitle: 'Manage accounts, access levels, and usage statistics' },
     '/imports': { title: 'Data Import Activity', subtitle: 'Monitor background processing and ingestion logs' },

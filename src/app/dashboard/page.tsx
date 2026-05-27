@@ -8,10 +8,12 @@ import {
     CloudDownload,
     ChevronRight,
     TrendingUp,
-    Activity
+    Activity,
+    BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
+import { useCachedData } from '@/hooks/useCachedData';
 import { SystemStatus } from '@/components/SystemStatus';
 import { useAuth } from '@/context/AuthContext';
 
@@ -23,21 +25,18 @@ interface Stats {
 
 export default function DashboardPage() {
     const { user, isLoading: authLoading } = useAuth();
-    const [stats, setStats] = useState<Stats | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        if (!authLoading && user) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setIsLoading(true);
-            axios.get('/api/admin/stats')
-                .then(res => setStats(res.data))
-                .catch((err) => { 
-                    console.error('Failed to fetch stats:', err);
-                })
-                .finally(() => setIsLoading(false));
+    const { data: stats, isLoading } = useCachedData<Stats>(
+        'zander_dashboard_stats',
+        async () => {
+            const res = await axios.get('/api/admin/stats');
+            return res.data;
+        },
+        { 
+            enabled: !authLoading && !!user,
+            ttl: 30000 // 30 seconds TTL
         }
-    }, [user, authLoading]);
+    );
 
     const statCards = [
         { 
@@ -98,8 +97,32 @@ export default function DashboardPage() {
                 ))}
             </div>
             
-            <div className="max-w-md">
-                <SystemStatus />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                <div className="w-full">
+                    <SystemStatus />
+                </div>
+                
+                <Link href="/dashboard/documentation" 
+                    className="group bg-white p-6 md:p-8 rounded-[2rem] border border-neutral-100 hover:border-dark-green/20 transition-all duration-300 flex flex-col justify-between"
+                >
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-mint/20 flex items-center justify-center text-dark-green">
+                                <BookOpen className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-black text-neutral-900 tracking-tight">System Documentation</h3>
+                                <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">Reference Manual</p>
+                            </div>
+                        </div>
+                        <div className="bg-neutral-50 p-2 rounded-xl group-hover:bg-dark-green group-hover:text-white transition-colors">
+                            <ChevronRight className="w-4 h-4" />
+                        </div>
+                    </div>
+                    <p className="text-xs text-neutral-500 leading-relaxed font-light mt-2">
+                        Access system logs, architecture decisions, and setup instructions in a clean standalone view.
+                    </p>
+                </Link>
             </div>
 
         </AdminLayout>

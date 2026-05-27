@@ -12,8 +12,9 @@ import {
     X,
     Eye
 } from 'lucide-react';
-import axios from 'axios';
+import { useCachedData } from '@/hooks/useCachedData';
 import { useAuth } from '@/context/AuthContext';
+import axios from 'axios';
 import Modal from '@/components/ui/Modal';
 
 interface ImportJob {
@@ -29,30 +30,30 @@ interface ImportJob {
 
 export default function ImportsPage() {
     const { user, isLoading: authLoading } = useAuth();
-    const [imports, setImports] = useState<ImportJob[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedJob, setSelectedJob] = useState<ImportJob | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        if (!authLoading && user) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setIsLoading(true);
-
-            axios.get('/api/admin/imports')
-                .then(res => setImports(res.data.imports))
-                .catch(err => console.error('Failed to fetch imports:', err))
-                .finally(() => setIsLoading(false));
+    const { data: importsData, isLoading, isRefetching, refetch } = useCachedData<{ imports: ImportJob[] }>(
+        'zander_imports_list',
+        async () => {
+            const res = await axios.get('/api/admin/imports');
+            return res.data;
+        },
+        { 
+            enabled: !authLoading && !!user,
+            ttl: 60000 // 1 minute TTL
         }
-    }, [user, authLoading]); // Removed imports.length as it's not needed if we just set true
+    );
+
+    const imports = importsData?.imports || []; 
 
     const filteredImports = imports.filter(job =>
-        job.provider.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.provider?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.userName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.userEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.userId.toLowerCase().includes(searchQuery.toLowerCase())
+        job.userId?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const handleViewDetails = (job: ImportJob) => {
@@ -100,16 +101,11 @@ export default function ImportsPage() {
                     )}
                 </div>
                 <button
-                    onClick={() => {
-                        setIsLoading(true);
-                        axios.get('/api/admin/imports')
-                            .then(res => setImports(res.data.imports))
-                            .finally(() => setIsLoading(false));
-                    }}
-                    disabled={isLoading}
+                    onClick={() => refetch()}
+                    disabled={isLoading || isRefetching}
                     className="flex items-center gap-2 px-6 py-3 bg-white border border-neutral-100 rounded-2xl text-sm font-bold text-neutral-600 hover:bg-neutral-50 hover:border-neutral-200 transition-all disabled:opacity-50"
                 >
-                    <RefreshCcw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                    <RefreshCcw className={`w-4 h-4 ${isLoading || isRefetching ? 'animate-spin' : ''}`} />
                     <span>Refresh</span>
                 </button>
             </div>

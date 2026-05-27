@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AdminLayout from '@/components/AdminLayout';
-import { Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Save, AlertCircle, CheckCircle2, BookOpen } from 'lucide-react';
+import Link from 'next/link';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/AuthContext';
+import { useCachedData } from '@/hooks/useCachedData';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 
@@ -28,40 +30,45 @@ export default function SettingsPage() {
     const [termsOfService, setTermsOfService] = useState('');
     const [supportEmail, setSupportEmail] = useState('');
     
-    const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+    const hasInitialized = useRef(false);
+
+    const { data: settingsData, isLoading, mutate } = useCachedData<AppSettings>(
+        'zander_settings',
+        async () => {
+            const res = await axios.get('/api/admin/settings');
+            return res.data;
+        },
+        { 
+            enabled: !authLoading && !!user,
+            ttl: 5 * 60 * 1000 // 5 minutes TTL
+        }
+    );
 
     useEffect(() => {
-        if (!authLoading && user) {
-            fetchSettings();
+        if (settingsData && !hasInitialized.current) {
+            setPrivacyPolicy(settingsData.privacyPolicy || '');
+            setTermsOfService(settingsData.termsOfService || '');
+            setSupportEmail(settingsData.supportEmail || '');
+            hasInitialized.current = true;
         }
-    }, [user, authLoading]);
-
-    const fetchSettings = async () => {
-        try {
-            setIsLoading(true);
-            const res = await axios.get('/api/admin/settings');
-            setPrivacyPolicy(res.data.privacyPolicy || '');
-            setTermsOfService(res.data.termsOfService || '');
-            setSupportEmail(res.data.supportEmail || '');
-        } catch (error) {
-            console.error('Failed to fetch settings:', error);
-            setMessage({ type: 'error', text: 'Failed to load settings.' });
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }, [settingsData]);
 
     const handleSave = async () => {
         try {
             setIsSaving(true);
             setMessage(null);
-            await axios.post('/api/admin/settings', {
+            const updatedSettings = {
                 privacyPolicy,
                 termsOfService,
                 supportEmail
-            });
+            };
+            await axios.post('/api/admin/settings', updatedSettings);
+            
+            // Update local cache with newly saved settings
+            mutate(updatedSettings, false);
+            
             setMessage({ type: 'success', text: 'Settings saved successfully. Changes will reflect in the mobile app immediately.' });
 
             // Clear success message after 5 seconds
@@ -121,6 +128,26 @@ export default function SettingsPage() {
                                             placeholder="Enter support email address"
                                         />
                                     </div>
+                                </div>
+                            </section>
+
+                            {/* System Documentation Reference */}
+                            <section>
+                                <h2 className="text-lg font-bold text-neutral-900 mb-4 pb-2 border-b border-neutral-100">System Documentation</h2>
+                                <div className="p-6 bg-neutral-50 rounded-2xl border border-neutral-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <div>
+                                        <h3 className="text-sm font-bold text-neutral-800 mb-1">Architecture & API Reference Manual</h3>
+                                        <p className="text-xs text-neutral-500 max-w-lg leading-relaxed">
+                                            Access technical logs, architecture decisions, and setup instructions. Opens in an immersive standalone reader view.
+                                        </p>
+                                    </div>
+                                    <Link 
+                                        href="/dashboard/documentation?from=settings"
+                                        className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-neutral-900 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold transition-all shrink-0 hover:translate-x-0.5"
+                                    >
+                                        <BookOpen className="w-4 h-4" />
+                                        <span>Open Documentation</span>
+                                    </Link>
                                 </div>
                             </section>
 

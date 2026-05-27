@@ -13,6 +13,7 @@ import {
     ShieldCheck,
     Settings,
     Database,
+    BookOpen,
 } from 'lucide-react';
 import axios from 'axios';
 import { clsx, type ClassValue } from 'clsx';

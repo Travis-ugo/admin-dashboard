@@ -77,5 +77,10 @@ service cloud.firestore {
       allow read: if true; // Publicly readable settings (like privacy policy)
       allow write: if isAdmin(); // Only admins can update app settings
     }
+
+    // --- System Documentation (Admin only) ---
+    match /system_documentation/{docId} {
+      allow read, write: if isAdmin();
+    }
   }
 }

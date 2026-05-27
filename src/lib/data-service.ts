@@ -97,7 +97,7 @@ export async function getFaq(id: string) {
 export async function getKnowledgeAnalytics() {
   let recentNotes: any[] = [];
   let recentImports: any[] = [];
-  const stats = {
+  let stats = {
     totalUsers: 0,
     totalNotes: 0,
     totalImports: 0,
@@ -186,58 +186,15 @@ export async function getKnowledgeAnalytics() {
 
 export async function getImports() {
   const snapshot = await db.collection('imports').orderBy('created_at', 'desc').limit(50).get();
-  
-  // 1. Extract unique user IDs
-  const userIds = Array.from(new Set(snapshot.docs.map(doc => doc.data().user_id).filter(Boolean))) as string[];
-  
-  // 2. Fetch user documents in parallel
-  const userMap: { [key: string]: { name: string; email: string } } = {};
-  if (userIds.length > 0) {
-    const userDocs = await Promise.all(
-      userIds.map(uid => db.collection('users').doc(uid).get())
-    );
-    userDocs.forEach(doc => {
-      if (doc.exists) {
-        const data = doc.data() || {};
-        userMap[doc.id] = {
-          name: data.name || data.display_name || data.displayName || 'Unknown User',
-          email: data.email || 'No email'
-        };
-      } else {
-        userMap[doc.id] = {
-          name: 'Unknown User',
-          email: 'No email'
-        };
-      }
-    });
-  }
-
-  // 3. Map imports and attach user info
   return snapshot.docs.map(doc => {
     const data = doc.data();
-    const userId = data.user_id || '';
-    const userInfo = userMap[userId] || { name: 'Unknown User', email: 'No email' };
-    
-    // Map provider names cleanly
-    const providerMap: { [key: string]: string } = {
-      'os_notes': 'Apple Notes',
-      'google_keep': 'Google Keep',
-      'chatgpt': 'ChatGPT Export',
-      'claude': 'Claude Export',
-      'gemini': 'Gemini Export'
-    };
-    const provider = providerMap[data.type] || data.type || 'Unknown Source';
-
     return {
       id: doc.id,
-      userId: userId,
-      userName: userInfo.name,
-      userEmail: userInfo.email,
-      status: data.status || 'Pending',
-      createdAt: data.created_at?.toDate?.()?.toISOString() || data.created_at || new Date().toISOString(),
+      userId: data.user_id,
+      status: data.status,
+      createdAt: data.created_at?.toDate?.()?.toISOString() || data.created_at,
       type: data.type || 'os_notes',
-      provider: provider,
-      itemCount: data.items_created !== undefined ? data.items_created : (data.itemCount || 0),
+      itemsCreated: data.items_created || 0,
     };
   });
 }

@@ -10,8 +10,9 @@ import {
     Clock,
     X
 } from 'lucide-react';
-import axios from 'axios';
+import { useCachedData } from '@/hooks/useCachedData';
 import { useAuth } from '@/context/AuthContext';
+import axios from 'axios';
 
 interface User {
     id: string;
@@ -24,25 +25,26 @@ interface User {
 
 export default function UsersPage() {
     const { user, isLoading: authLoading } = useAuth();
-    const [users, setUsers] = useState<User[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        if (!authLoading && user) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setIsLoading(true);
-            axios.get('/api/admin/users')
-                .then(res => setUsers(res.data.users))
-                .catch(err => console.error('Failed to fetch users:', err))
-                .finally(() => setIsLoading(false));
+    const { data: usersData, isLoading } = useCachedData<{ users: User[] }>(
+        'zander_users_list',
+        async () => {
+            const res = await axios.get('/api/admin/users');
+            return res.data;
+        },
+        { 
+            enabled: !authLoading && !!user,
+            ttl: 60000 // 1 minute TTL
         }
-    }, [user, authLoading]);
+    );
+
+    const users = usersData?.users || [];
 
     const filteredUsers = users.filter(u => 
-        u.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        u.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (u.name && u.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        u.email?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        u.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        u.name?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
