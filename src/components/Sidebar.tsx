@@ -53,8 +53,8 @@ export default function Sidebar() {
         <aside className="w-68 bg-white border-r border-neutral-100 flex flex-col h-screen sticky top-0 z-40" style={{ width: '272px' }}>
             {/* Logo */}
             <div className="p-8 flex items-center gap-4">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-neutral-100">
-                    <img src="/logo.svg" alt="Zander" className="w-full h-full object-contain p-1" />
+                <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+                    <img src="/logo.svg" alt="Zander" className="w-full h-full object-contain" />
                 </div>
                 <div>
                     <h2 className="font-bold text-neutral-900 leading-tight">Zander</h2>

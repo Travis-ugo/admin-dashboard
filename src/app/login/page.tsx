@@ -89,8 +89,8 @@ export default function LoginPage() {
     return (
         <div className="rounded-2xl p-8">
             <div className="text-left mb-10">
-                <div className="w-14 h-14 bg-white rounded-2xl mb-6 flex items-center justify-center overflow-hidden border border-neutral-100">
-                    <img src="/logo.svg" alt="Zander" className="w-full h-full object-contain p-1.5" />
+                <div className="w-14 h-14 mb-6 flex items-center justify-center overflow-hidden">
+                    <img src="/logo.svg" alt="Zander" className="w-full h-full object-contain" />
                 </div>
                 <h1 className="text-3xl font-bold text-neutral-900 mb-2">
                     Zander Portal

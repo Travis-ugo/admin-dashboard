@@ -17,7 +17,7 @@ export default function AuthLayout({
                 
                 <div className="relative z-10 text-white text-center px-12">
                     <div className="w-24 h-24 bg-white/10 backdrop-blur-md rounded-[2rem] mx-auto mb-8 flex items-center justify-center border border-white/20 overflow-hidden p-4">
-                        <img src="/logo.svg" alt="Zander" className="w-full h-full object-contain brightness-0 invert" />
+                        <img src="/logo.svg" alt="Zander" className="w-full h-full object-contain" />
                     </div>
                     <h1 className="text-5xl font-black mb-4 tracking-tight text-white">Zander Portal</h1>
                     <p className="text-xl text-sage font-medium opacity-90 max-w-sm mx-auto leading-relaxed">
